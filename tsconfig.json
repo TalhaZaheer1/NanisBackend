@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                        // Modern JS output
+    "module": "CommonJS",                      // Required for Node.js
+    "lib": ["ES2020"],                         // Enable modern JS features
+    "outDir": "./dist",                        // Compiled JS output
+    "rootDir": "./src",                        // Your source code
+    "strict": true,                            // Enable all strict type-checking
+    "moduleResolution": "node",                // Node module resolution
+    "esModuleInterop": true,                   // Allow import/export compatibility
+    "forceConsistentCasingInFileNames": true,  // Enforce file case consistency
+    "skipLibCheck": true,                      // Speed up builds by skipping type checks on node_modules
+    "resolveJsonModule": true,                 // Allow importing JSON files
+    "experimentalDecorators": true,            // Required by TypeORM
+    "emitDecoratorMetadata": true,              // Required by TypeORM
+    "noImplicitAny": false
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
