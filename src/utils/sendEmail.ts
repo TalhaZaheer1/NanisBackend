@@ -31,7 +31,7 @@ const sendOTPEmail = async (to: string, otp: string) => {
   });
 
   await transporter.sendMail({
-    from: `"MyApp" <${process.env.EMAIL_USER}>`,
+    from: `"Nanis" <${process.env.EMAIL_USER}>`,
     to,
     subject: "Reset Your Password",
     html: `
