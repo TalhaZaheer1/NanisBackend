@@ -13,7 +13,7 @@ const sendOTPEmail = async (to: string, otp: string) => {
   const emailContent = EmailTemplates.otp(otp);
 
   await transporter.sendMail({
-    from: `"MyApp" <${process.env.EMAIL_USER}>`,
+    from: `"Nanis" <${process.env.EMAIL_USER}>`,
     to,
     subject: emailContent.subject,
     text: emailContent.text,
