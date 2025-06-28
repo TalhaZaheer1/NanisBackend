@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class User {
@@ -7,6 +13,8 @@ export class User {
 
   @Column({ unique: true, nullable: true })
   email!: string;
+  @Column({ type: "text", nullable: true })
+  profilePic!: string;
 
   @Column({ nullable: true })
   password!: string;
@@ -17,14 +25,14 @@ export class User {
   @Column({ nullable: true })
   provider!: string; // 'google', 'microsoft', 'apple', 'local'
 
-  @Column({nullable:true})
+  @Column({ nullable: true })
   otp!: string;
 
-  @Column({nullable: true})
-  verified!: boolean
+  @Column({ nullable: true })
+  verified!: boolean;
 
-  @Column({nullable: true})
-  preference!: string
+  @Column({ nullable: true })
+  preference!: string;
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -32,5 +40,3 @@ export class User {
   @UpdateDateColumn()
   updatedAt!: Date;
 }
-
-

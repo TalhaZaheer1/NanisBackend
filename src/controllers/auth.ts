@@ -104,9 +104,9 @@ const requestPasswordReset = async (req: Request, res: Response) => {
 
 const signup = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email } = req.body;
 
-    if (!email || !password) {
+    if (!email ) {
       res.status(400).json({ msg: "Missing required fields" });
       return;
     }
@@ -117,12 +117,12 @@ const signup = async (req: Request, res: Response) => {
       return;
     }
 
-    const hashed = await bcrypt.hash(password, 10);
+    // const hashed = await bcrypt.hash(password, 10);
     const otp = generateOTP();
 
     const user = userRepo.create({
       email,
-      password: hashed,
+      // password: hashed,
       provider: "local",
       otp,
       verified: false,

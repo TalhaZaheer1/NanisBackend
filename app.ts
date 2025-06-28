@@ -8,18 +8,20 @@ import cors from "cors";
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
-app.use(express.json());
+app.use(cors({ origin: process.env.FRONTEND_URL, 
+  credentials: true
+}));
+app.use(express.json({ limit: '5mb' }));
 app.use(
   session({
     secret: "secret123",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      // maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
-      secure: true,
-      sameSite:"none"
+      // secure: true,
+      // sameSite:"none"
     },
   }),
 );
