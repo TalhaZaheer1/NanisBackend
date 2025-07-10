@@ -4,11 +4,11 @@ import { User } from "../entities/User";
 import bcrypt from "bcrypt";
 
 const updateUserProfile = async (req: Request, res: Response) => {
-  const { name, preference, password } = req.body;
+  const { name, password } = req.body;
   try {
     const user = req.user as User;
     const hashed = await bcrypt.hash(password, 10);
-    await userRepo.update(user.id, { name, preference, password: hashed });
+    await userRepo.update(user.id, { name,  password: hashed });
     user.password = "";
     res.json({ msg: "Update Successful.", user });
   } catch (error) {

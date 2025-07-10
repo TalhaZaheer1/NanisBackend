@@ -1,6 +1,8 @@
 import { DataSource } from "typeorm";
 import { User } from "../entities/User";
 import dotenv from "dotenv";
+import { Conversation } from "../entities/Conversation";
+import { Message } from "../entities/Message";
 
 dotenv.config();
 
@@ -13,12 +15,16 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
   synchronize: true, // use migrations in production
   logging: false,
-  entities: [User],
+  entities: [User,Conversation,Message],
 });
 
 const userRepo = AppDataSource.getRepository(User);
+const conversationRepo = AppDataSource.getRepository(Conversation);
+const messageRepo = AppDataSource.getRepository(Message);
 
 export {
-  userRepo
+  userRepo,
+  conversationRepo,
+  messageRepo
 }
 

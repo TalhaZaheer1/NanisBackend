@@ -3,6 +3,7 @@ import session from "express-session";
 import passport from "passport";
 import authRoutes from "./src/routes/auth";
 import userRoutes from "./src/routes/user";
+import conversationRoutes from "./src/routes/conversation"
 import "./src/config/passport";
 import cors from "cors";
 
@@ -30,5 +31,6 @@ app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/conversation",conversationRoutes);
 
 export default app;

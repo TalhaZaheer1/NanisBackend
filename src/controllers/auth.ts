@@ -4,11 +4,16 @@ import { AppDataSource } from "../config/data-source";
 import { User } from "../entities/User";
 import { sendOTPEmail, sendResetLinkEmail } from "../utils/sendEmail";
 import jwt from "jsonwebtoken";
+import passport from "passport";
 
 const userRepo = AppDataSource.getRepository(User);
 
 export const generateOTP = () =>
   Math.floor(1000 + Math.random() * 9000).toString();
+
+const getUser = async (req: Request, res: Response) => {
+  res.json({ user: req.user });
+};
 
 const verifyOtp = async (req: Request, res: Response) => {
   const { email, otp } = req.body;
@@ -26,7 +31,7 @@ const verifyOtp = async (req: Request, res: Response) => {
     }
 
     if (user.otp !== otp) {
-      res.status(400).json({ msg: "Invalid OTP" });
+      res.status(400).json({ msg: "Wrong code. Try again" });
       return;
     }
 
@@ -102,11 +107,30 @@ const requestPasswordReset = async (req: Request, res: Response) => {
   }
 };
 
+const checkEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      res.status(400).json({ msg: "Missing required fields" });
+      return;
+    }
+
+    const existing = await userRepo.findOneBy({ email });
+    if (existing) {
+      res.json({ msg: "Email is registered" });
+      return;
+    } else res.status(400).json({ msg: "Email doesn't exist" });
+  } catch (error: any) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 const signup = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
-    if (!email ) {
+    if (!email) {
       res.status(400).json({ msg: "Missing required fields" });
       return;
     }
@@ -172,9 +196,21 @@ const resendOtp = async (req: Request, res: Response) => {
   }
 };
 
-const loginLocal = (req, res) => {
-  delete req.user.password;
-  res.json({ msg: "Logged in", user: req.user });
+const loginLocal = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) {
+      // This will send JSON error when credentials are invalid
+      return res.status(401).json({ msg: info?.message || "Login failed" });
+    }
+    // Log the user in manually
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      const safeUser = { ...user };
+      delete safeUser.password;
+      return res.json({ msg: "Logged in", user: safeUser });
+    });
+  })(req, res, next);
 };
 
 export {
@@ -184,4 +220,6 @@ export {
   resetPassword,
   requestPasswordReset,
   verifyOtp,
+  checkEmail,
+  getUser,
 };

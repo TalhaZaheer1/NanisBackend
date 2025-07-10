@@ -1,40 +1,27 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { Conversation } from "./Conversation";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-export type MessageType = "text" | "image" | "audio" | "file" | "system";
+export enum MessageRole {
+  USER = "user",
+  BOT = "bot"
+}
 
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
-  id!: number;
-
-  @ManyToOne(() => Conversation, (conversation) => conversation.messages, {
-    onDelete: "CASCADE",
-  })
-  conversation!: Conversation;
-
-  @Column({ type: "enum", enum: ["text", "image", "audio", "file", "system"] })
-  type!: MessageType;
+  id!: string;
 
   @Column()
-  role!: "user" | "assistant" | "system";
+  conversationId!:string;
 
-  @Column({ type: "text" })
-  content!: string;
+  @Column()
+  content!:string;
 
-  @Column({ nullable: true })
-  fileUrl?: string;
+  @Column({type:"enum",enum:MessageRole,default:MessageRole.BOT})
+  role!:MessageRole
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!:Date;
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!:Date;
 }

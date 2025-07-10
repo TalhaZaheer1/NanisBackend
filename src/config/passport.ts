@@ -22,7 +22,7 @@ passport.use(
     const user = await userRepo.findOneBy({ email });
     if (!user || !user.password) return done(null, false, { message: "Invalid credentials" });
     const isValid = await bcrypt.compare(password, user.password);
-    return isValid ? done(null, user) : done(null, false);
+    return isValid ? done(null, user) : done(null,false,{message:"Incorrect Password"});
   })
 );
 // Google Strategy
