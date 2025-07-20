@@ -34,9 +34,13 @@ export class User {
   @Column({ nullable: true })
   preference!: string;
 
+  @Column({nullable:true})
+  lastLoggedIn!:Date;
+
   @CreateDateColumn()
   createdAt!: Date;
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
 }

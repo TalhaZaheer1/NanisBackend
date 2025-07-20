@@ -3,7 +3,7 @@ import passport from "passport";
 import {
   loginLocal,
   signup,
-  requestPasswordReset,
+  verifyForgotPasswordOtp,
   resetPassword,
   resendOtp,
   verifyOtp,
@@ -21,7 +21,7 @@ router.get("/get-user",ensureAuthenticated,getUser)
 
 router.post("/login", loginLocal);
 
-router.post("/request-password-reset", requestPasswordReset);
+router.post("/verify-otp-forgot-password", verifyForgotPasswordOtp);
 router.post("/reset-password", resetPassword);
 router.post("/check-email",checkEmail)
 
