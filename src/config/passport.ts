@@ -60,7 +60,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: "https://nanisbackend.onrender.com/api/auth/google/callback",
     },
     async (_accessToken, _refreshToken, profile, done) => {
       const email = profile.emails?.[0].value;
