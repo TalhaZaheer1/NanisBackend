@@ -24,7 +24,7 @@ const verifyForgotPasswordOtp = async (req: Request, res: Response) => {
   const { email, otp } = req.body;
 
   if (!email || !otp) {
-    res.status(400).json({ msg: "Email and OTP are required" });
+    res.status(400).json({ msg: "This field is required" });
     return;
   }
 
@@ -62,7 +62,7 @@ const verifyOtp = async (req: Request, res: Response) => {
   const { email, otp, isLogin } = req.body;
 
   if (!email || !otp) {
-    res.status(400).json({ msg: "Email and OTP are required" });
+    res.status(400).json({ msg: "This field is required" });
     return;
   }
 
@@ -108,6 +108,11 @@ const resetPassword = async (req: Request, res: Response) => {
       return;
     }
 
+    const isValid = await bcrypt.compare(newPassword, user.password);
+
+    if(isValid)
+      throw new Error("Cannot use the same password")  
+
     const hashed = await bcrypt.hash(newPassword, 10);
     user.password = hashed;
 
@@ -115,7 +120,7 @@ const resetPassword = async (req: Request, res: Response) => {
     res.json({ msg: "Password has been reset successfully." });
     return;
   } catch (error: any) {
-    res.status(400).json({ msg: "Invalid or expired token." });
+    res.status(400).json({ msg: error.message || "Invalid or expired token." });
   }
 };
 
@@ -163,14 +168,14 @@ const checkEmail = async (req: Request, res: Response) => {
     if (!isFormatValid) throw new Error("Email doesn't exist");
 
     const existing = await userRepo.findOneBy({ email });
-    console.log({existing})
+    console.log({ existing });
     if (existing) {
-    if (existing.provider !== "local") {
+      if (existing.provider !== "local") {
         res
           .status(500)
           .json({ msg: `Please sign-in through ${existing.provider}` });
         return;
-      }else  if (!existing.verified) {
+      } else if (!existing.verified || !existing.password) {
         const otp = generateOTP();
         await userRepo.update({ email }, { otp });
         await sendOTPEmail(email, otp);
@@ -187,7 +192,7 @@ const checkEmail = async (req: Request, res: Response) => {
           });
           return;
         });
-      }  else {
+      } else {
         res.json({ msg: "Email is registered", step: "login-password" });
         return;
       }
