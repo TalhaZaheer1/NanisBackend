@@ -60,14 +60,14 @@ passport.use(
     {
       clientID: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
-      callbackURL: "https://nanisbackend.onrender.com/api/auth/google/callback",
+      callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`,
     },
     async (_accessToken, _refreshToken, profile, done) => {
       const email = profile.emails?.[0].value;
       console.log({profile})
       let user = await userRepo.findOneBy({ email });
       if (!user) {
-        user = userRepo.create({ email, provider: "google",name:profile.displayName });
+        user = userRepo.create({ email, provider: "google",});
         await userRepo.save(user);
       }
       return done(null, user);

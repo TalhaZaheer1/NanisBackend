@@ -108,12 +108,7 @@ const resetPassword = async (req: Request, res: Response) => {
       return;
     }
 
-    const isValid = await bcrypt.compare(newPassword, user.password);
-
-    if(isValid)
-      throw new Error("Cannot use the same password")  
-
-    const hashed = await bcrypt.hash(newPassword, 10);
+        const hashed = await bcrypt.hash(newPassword, 10);
     user.password = hashed;
 
     await userRepo.save(user);

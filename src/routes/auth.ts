@@ -30,13 +30,28 @@ router.get(
   passport.authenticate("google", { scope: ["email", "profile"] }),
 );
 
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: `${process.env.FRONTEND_URL}/dashboard`,
-    failureRedirect: `${process.env.FRONTEND_URL}`,
-  }),
-);
+
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", async (err, user, _info) => {
+    if (err || !user) {
+      return res.redirect(`${process.env.FRONTEND_URL}`);
+    }
+
+    req.login(user, (loginErr) => {
+      if (loginErr) {
+        return res.redirect(`${process.env.FRONTEND_URL}`);
+      }
+
+      // If name is missing, redirect to onboarding
+      if (!user.name) {
+        return res.redirect(`${process.env.FRONTEND_URL}/onboarding?provider=google`);
+      }
+
+      // If user is complete, redirect to dashboard
+      return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+    });
+  })(req, res, next);
+});
 
 router.get("/microsoft", passport.authenticate("microsoft"));
 
