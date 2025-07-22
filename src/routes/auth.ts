@@ -32,24 +32,24 @@ router.get(
 
 
 router.get("/google/callback", (req, res, next) => {
-  passport.authenticate("google", async (err, user, _info) => {
+  passport.authenticate("google", (err, user, _info) => {
     if (err || !user) {
       return res.redirect(`${process.env.FRONTEND_URL}`);
     }
 
     req.login(user, (loginErr) => {
       if (loginErr) {
-        console.log({loginErr})
         return res.redirect(`${process.env.FRONTEND_URL}`);
       }
 
-      // If name is missing, redirect to onboarding
-      if (!user.name) {
-        return res.redirect(`${process.env.FRONTEND_URL}/onboarding?provider=google`);
-      }
+      // 🔥 Save the session manually before redirect
+      req.session.save(() => {
+        const redirectUrl = !user.name
+          ? `${process.env.FRONTEND_URL}/onboarding?provider=google`
+          : `${process.env.FRONTEND_URL}/dashboard`;
 
-      // If user is complete, redirect to dashboard
-      return res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+        return res.redirect(redirectUrl);
+      });
     });
   })(req, res, next);
 });
