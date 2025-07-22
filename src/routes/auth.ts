@@ -39,6 +39,7 @@ router.get("/google/callback", (req, res, next) => {
 
     req.login(user, (loginErr) => {
       if (loginErr) {
+        console.log({loginErr})
         return res.redirect(`${process.env.FRONTEND_URL}`);
       }
 
