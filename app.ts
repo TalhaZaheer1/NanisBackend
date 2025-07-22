@@ -19,13 +19,14 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      // maxAge: 1000 * 60 * 60 * 24 * 7,
       httpOnly: true,
-      // secure: true,
-      // sameSite:"none"
+      secure: true,              // Required for HTTPS (on Render)
+      sameSite: "none",          // Required for cross-domain (Vercel -> Render)
+      maxAge: 1000 * 60 * 60 * 24,
     },
-  }),
+  })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
